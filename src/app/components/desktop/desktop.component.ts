@@ -629,14 +629,27 @@ export class DesktopComponent implements OnInit{
   }
 
   moveContentInTree = () => {
-    if(this.draggedId === undefined || this.dragSource === undefined || this.dragDestination === undefined) {
+    if(this.draggedId === null || this.dragSource === null || this.dragDestination === null) {
       this.resetDrag();
       return;
     }
     const fromR = this.draggedPosition.row; const fromC = this.draggedPosition.column;
     const toR = this.draggedPositionEnd.row; const toC = this.draggedPositionEnd.column;
-
+    const app = this.dragSource.content.get(this.draggedId);
+    if(app!==undefined && app.application.type === AppType.Folder && this.isSubFolder(app, this.dragDestination)) {
+      this.resetDrag();
+      this.addNotification("destination folder is a sub folder of source folder", NotifType.Error);
+      return;
+    }
     if(this.dragDestination === this.dragSource) {
+      if(fromR === -1 || fromC ===-1 || toR === -1 || toC === -1) {
+        this.resetDrag();
+        return;
+      }
+      if(this.applicationsMatrix[fromR][fromC] !== this.draggedId) {
+        this.resetDrag();
+        return;
+      }
       if(this.dragSource === this.desktopTreeObj) {
         const dragTo = this.applicationsMatrix[toR][toC];
         if(dragTo !== null && this.applications.get(dragTo)?.name === 'recycle bin'){
