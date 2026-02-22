@@ -47,7 +47,7 @@ export class DesktopComponent implements OnInit{
   readonly experienceFolderPath = ["root", "Desktop", "Experience"]; experienceIsSet = false;
   readonly projectsFolderPath = ["root", "Desktop", "Projects"]; projectsObjRef !: ContentTreeStructure; projectIsSet = false;
   readonly experienceData = "./experience.json"; experience : Map<number, Experience> = new Map<number, Experience>();
-  readonly scriptData = "./script.json"; script : Map<number, Script> = new Map<number, Script>();
+  readonly scriptData = "./script.json"; script : Map<number, Script> = new Map<number, Script>(); scriptIds = new Map<string, number>();
   id = 50;
   readonly copyCutPasteObj : CopyCutPaste = {
     app_id : null,
@@ -86,7 +86,7 @@ export class DesktopComponent implements OnInit{
     fetch(this.scriptData).then(res => res.json()).then(
       jsonData=> {
         for(let item of jsonData) {
-          this.script.set(item.script, {
+          this.script.set(this.scriptIds.get(item.script) || -1, {
             name : item.script,
             script_code : item.script_code,
             permission : "r-x",
@@ -105,6 +105,9 @@ export class DesktopComponent implements OnInit{
     if (!this.experienceIsSet && experienceDepthIndex === this.experienceFolderPath.length) this.setExperienceFolderContent(treeNode);
     for(let item of jsonData) {
       let content = new Map<number, ContentTreeStructure>();
+      if(item.extension === '.sc') {
+        this.scriptIds.set(item.name, item.id);
+      }
       const app = {
           id : item.id,
           displayName : item.name,
@@ -489,6 +492,7 @@ export class DesktopComponent implements OnInit{
   }
 
   openWithId(id : number) {
+    console.log(this.script);
     const toOpen = this.applications.get(id);
     if(!toOpen) return;
     const uuid = crypto.randomUUID();
