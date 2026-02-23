@@ -1,9 +1,11 @@
 
 import { NgStyle, NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import Script from '../../models/Script';
 import { Experience } from '../../models/Experience';
 import { ConfirmationWindowService } from '../../services/confirmation-window.service';
+import { ExitRequestService } from '../../services/exit-request.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-file-reader',
@@ -11,12 +13,31 @@ import { ConfirmationWindowService } from '../../services/confirmation-window.se
   templateUrl: './file-reader.component.html',
   styleUrl: './file-reader.component.scss'
 })
-export class FileReaderComponent implements AfterViewInit{
+export class FileReaderComponent implements OnInit, AfterViewInit, OnDestroy{
 
   @Input() experience !: Experience;
   @Input() script !: Script | undefined;
 
-  constructor(private el : ElementRef, private confirmationWindowService : ConfirmationWindowService) {}
+  private sub !:Subscription;
+
+  constructor(private el : ElementRef, private confirmationWindowService : ConfirmationWindowService, private exitRequestService : ExitRequestService) {}
+
+  ngOnInit(): void {
+    this.sub = this.exitRequestService.exitRequested$.subscribe(async (proceed) => {
+      const title = this.el.nativeElement.querySelector('.title');
+      const description = this.el.nativeElement.querySelector('.description');
+      if(title.innerText !== this.experience.header || description.innerText !== this.experience.body) {
+        const answer = await this.confirmationWindowService.ask("You have unsaved changes, you want to saving them before closing?");
+        if(answer) {
+          this.experience.header = title.innerText;
+          this.experience.body = description.innerText;
+        }
+        proceed();
+      } else {
+        proceed();
+      }
+    })
+  }
 
   ngAfterViewInit(): void {
     if(this.experience) {
@@ -24,6 +45,10 @@ export class FileReaderComponent implements AfterViewInit{
       requestAnimationFrame(() => desc.focus());
       requestAnimationFrame(() => this.placeCaretAtEnd(desc));
     }
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   preventNewLine(event : KeyboardEvent) {

@@ -3,13 +3,14 @@ import { OpenInstance } from '../../models/OpenInstance';
 import { NgStyle } from '@angular/common';
 import { AppFocusService } from '../../services/app-focus.service';
 import { ContextMenuService } from '../../services/context-menu.service';
+import { ExitRequestService } from '../../services/exit-request.service';
 
 @Component({
   selector: 'app-window',
   imports: [NgStyle],
   templateUrl: './window.component.html',
   styleUrl: './window.component.scss',
-  providers: [AppFocusService]
+  providers: [AppFocusService, ExitRequestService]
 })
 export class WindowComponent implements AfterViewInit{
   @ViewChild("window") window!: ElementRef<HTMLDivElement>;
@@ -19,6 +20,7 @@ export class WindowComponent implements AfterViewInit{
   @Input() removeOpenInstance !: (key : string, openInstanceId : string) => void;
   @Input() putFront !: (key : string, openInstanceId : string) => void;
   @Input() icon !: string | undefined;
+  @Input() enable_exit_request : boolean = false;
   isDragging = false;
   xOffset=0;
   yOffset=0;
@@ -33,7 +35,7 @@ export class WindowComponent implements AfterViewInit{
     }
   }
 
-  constructor(private el : ElementRef, private appFocusService : AppFocusService, private contextmenuService : ContextMenuService) {}
+  constructor(private el : ElementRef, private appFocusService : AppFocusService, private contextmenuService : ContextMenuService, private exitRequestService : ExitRequestService) {}
 
   ngAfterViewInit(): void {
     document.addEventListener('mousemove', this.onMouseMove);
@@ -66,7 +68,12 @@ export class WindowComponent implements AfterViewInit{
   }
 
   close = () => {
-    this.removeOpenInstance(this.instanceType, this.openInstance.id);
+    if(this.enable_exit_request) {
+      this.exitRequestService.requestExit(() => this.removeOpenInstance(this.instanceType, this.openInstance.id));
+    } else {
+      this.removeOpenInstance(this.instanceType, this.openInstance.id);
+    }
+    
   }
 
   onRightClick(event : MouseEvent) {

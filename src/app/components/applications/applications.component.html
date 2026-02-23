@@ -33,7 +33,7 @@
             </ng-container>
 
             <ng-container *ngSwitchDefault>
-                <app-window [openInstance]="instance" [instanceType]="appInstances.key" [putFront]="putOpenInstanceFront" [removeOpenInstance]="removeOpenInstance">
+                <app-window [openInstance]="instance" [instanceType]="appInstances.key" [putFront]="putOpenInstanceFront" [removeOpenInstance]="removeOpenInstance" [enable_exit_request]="experience.has(instance.application.id)">
                     @if(experience.has(instance.application.id)) {
                         <app-file-reader class="application-body" [experience]="experience.get(instance.application.id)" />
                     } @else {
