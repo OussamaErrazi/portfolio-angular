@@ -1,11 +1,11 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { KeyValuePipe, NgFor, NgIf, NgStyle } from '@angular/common';
+import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import ContentTreeStructure from '../../models/ContentTreeStructure';
 import { AppType } from '../../models/AppType';
 
 @Component({
   selector: 'app-folders-structure-panel',
-  imports: [NgFor, NgIf, NgStyle, KeyValuePipe,forwardRef(()=> FoldersStructurePanelComponent)],
+  imports: [NgFor, NgIf, KeyValuePipe,forwardRef(()=> FoldersStructurePanelComponent)],
   templateUrl: './folders-structure-panel.component.html',
   styleUrl: './folders-structure-panel.component.scss'
 })

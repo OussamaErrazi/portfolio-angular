@@ -122,6 +122,8 @@
         </div>
 
         <div class="music-card card">
+            <div class="music-logo"><img src="./music.png" alt="music icon"></div>
+            <div class="like-button" [class.liked]="liked" (click)="like()"><img src="./heart.png" alt="heart icon button"></div>
             <p class="music-title" [attr.next]="'Title Here'" [attr.prev]="'Title Here'" [ngStyle]="{'transform' : nextMusic ? 'translateX(-100%)' : prevMusic ? 'translateX(100%)' :'', 'transition' : nextMusic || prevMusic ? 'transform .4s ease' : ''}">Title Here</p>
             <p class="music-author" [attr.next]="'author here'" [attr.prev]="'author here'" [ngStyle]="{'transform' : nextMusic ? 'translateX(-100%)' : prevMusic ? 'translateX(100%)' : '', 'transition' : nextMusic || prevMusic ? 'transform .3s .1s ease' : ''}">author here</p>
             <div class="music-player"

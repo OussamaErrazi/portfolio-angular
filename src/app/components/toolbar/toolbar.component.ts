@@ -1,5 +1,5 @@
 import { NgClass, NgStyle, NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { MenuItem } from '../../models/MenuItem';
 import { HttpClient } from '@angular/common/http';
 import { NotifType } from '../../models/NotifType';
@@ -33,7 +33,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   cover = false; showConnectWindow = false; mouseLeft = true; connecting = false; emptyPassword = false; showCards = false;
   shuttingDown = false;
   info = '';
-  musicIsPlaying = true; nextMusic = false; prevMusic = false; musicTrackLength = 203; musicElapsedTime = 0; dragSeekBar = false;
+  musicIsPlaying = true; nextMusic = false; prevMusic = false; musicTrackLength = 203; musicElapsedTime = 0; dragSeekBar = false; liked = false;
   selectedWeather = ''; weatherIcon = ''; weatherDegree = 0; weatherCardDate = '';
   
   constructor(private http : HttpClient, private renderer : Renderer2, private el : ElementRef, private contextmenuService : ContextMenuService) {}
@@ -222,8 +222,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     if(!this.dragSeekBar) this.musicElapsedTime++;
   }
 
+  like(){
+    this.liked=!this.liked;
+  }
+
   playPrevMusic() {
     if(this.prevMusic || this.nextMusic) return;
+    this.liked = false;
     this.prevMusic = true;
     this.musicElapsedTime = 0;
     this.musicTrackLength = Math.floor(Math.random()*121) + 120;
@@ -232,6 +237,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   playNextMusic() {
     if(this.prevMusic || this.nextMusic) return;
+    this.liked =false;
     this.nextMusic = true;
     this.musicElapsedTime = 0;
     this.musicTrackLength = Math.floor(Math.random()*121) + 120;
