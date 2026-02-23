@@ -39,6 +39,7 @@
             cursor: pointer;
             border-radius: 5px;
             transition: .1s;
+            border: 2px solid var(--color-1);
 
             .item-name{
                 width: 80%; height: 90%; display: flex; align-items: center;
@@ -54,11 +55,19 @@
             }
 
             &:has(.hide:hover){
-                background-color: var(--color-blue);
+                border-color: var(--color-blue);
+
+                .hide,.item-name{
+                    color: var(--color-blue);
+                }
             }
 
             &:has(.close:hover){
-                background-color: var(--color-red);
+                border-color: var(--color-red);
+
+                .close,.item-name{
+                    color: var(--color-red);
+                }
             }
         }
 

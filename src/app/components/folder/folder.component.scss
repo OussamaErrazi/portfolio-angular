@@ -16,8 +16,15 @@
 
         .fs{
             display: flex; flex-direction: column;
-            height: 100%;
+            min-height: 100%; min-width: 100%; width: max-content;
             background-color: var(--color-3);
+            overflow-x: scroll;
+
+            &::-webkit-scrollbar-track,&::-webkit-scrollbar,&::-webkit-scrollbar-thumb{
+                display: none;
+                width: 0px;
+                background-color: transparent;
+            }
         }
     }
 

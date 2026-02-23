@@ -9,10 +9,11 @@
         <div class="item" *ngFor="let item of stack; index as i" style="--i : {{i}};"
             (mouseenter)="onMouseEnterInstance(item.id)"
             (mouseleave)="onMouseLeaveInstance(item.id)"
-            [class.hidden]="item.hidden">
+            [class.hidden]="item.hidden"
+            >
                 <p class="item-name" (click)="putFront(item.id)">{{item.application.displayName}}</p>
-                <div class="button hide" (click)="hideReveal(item.id)">{{item.hidden ? '&#9650;' : '&#9660;'}}</div>
-                <div class="button close" (click)="close(item.id)">X</div>
+                <div class="button hide" (click)="hideReveal(item.id)" title="{{item.hidden ? 'reveal' : 'hide'}}">{{item.hidden ? '&#9650;' : '&#9660;'}}</div>
+                <div class="button close" (click)="close(item.id)" title="close">X</div>
         </div>
     </div>
     

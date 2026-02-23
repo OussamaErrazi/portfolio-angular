@@ -1,10 +1,9 @@
 .folder{
     position: relative;
-    width: 100%;
+    width: 90%;
     height: 20px;
     padding: 2px;
     transition: background-color .1s , color .1s;
-    
 
     &:has(.folder-name:hover), &:has(.show-sub-folders:hover){
         background-color: var(--bg-color-3);
@@ -16,9 +15,12 @@
     }
 
     .folder-name{
-        width: max-content;
+        width: 80%;
         cursor: pointer;
         font-weight: unset;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     .selected{
@@ -30,5 +32,7 @@
 
 .sub-folders{
     color: var(--bg-color-1);
-    overflow: hidden;
+    width: calc( 100% + 10px );
+    padding-left: 10px;
+    border-left: 1px solid var(--bg-color-3);
 }
