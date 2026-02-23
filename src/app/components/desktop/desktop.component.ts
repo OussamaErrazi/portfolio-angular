@@ -740,8 +740,15 @@ export class DesktopComponent implements OnInit{
     if(!app.canDelete) {
       this.addNotification("cannot delete "+app.displayName+app.extension, NotifType.Error);
       return;
-    } else if (app.type === AppType.Folder){
-      if(this.isFolderUsed(app_id)) {
+    }
+
+    parentNodeRef = this.getParentNodeOf(app_id);
+    if(parentNodeRef === null) return;
+    itemNodeRef = parentNodeRef?.content.get(app_id) || null;
+    if(itemNodeRef === null) return;
+    
+    if (app.type === AppType.Folder){
+      if(this.isFolderUsed(itemNodeRef)) {
         this.addNotification("unable to delete '"+app.displayName+"', it is in use.", NotifType.Warning);
         return;
       }
@@ -755,8 +762,6 @@ export class DesktopComponent implements OnInit{
         return;
       }
     }
-    parentNodeRef = this.getParentNodeOf(app_id);
-    itemNodeRef = parentNodeRef?.content.get(app_id) || null;
     if(itemNodeRef !== null && parentNodeRef !== null) {
       parentNodeRef.content.delete(app_id);
       this.deletedItems.set(app_id, {
@@ -770,8 +775,26 @@ export class DesktopComponent implements OnInit{
     }
   }
 
-  isFolderUsed(folder_id : number) : boolean {
+  isFolderUsed(folder : ContentTreeStructure) : boolean {
+    let stack : ContentTreeStructure[] = [];
+    stack.push(folder);
+    while(stack.length !== 0) {
+      const f = stack.pop();
+      if(f?.application.type === AppType.Folder && this.isFolderOpen(f)) return true;
+      if(f?.application.type === AppType.File && this.isFileOpen(f.application.id)) return true;
+      if(f?.application.type === AppType.Application && this.stacksMap.has(f.application.name)) return true;
 
+      for(let v of f?.content.values() || []){
+        stack.push(v);
+      }
+    }
+    return false;
+  }
+
+  isFolderOpen(folder : ContentTreeStructure) {
+    for(let v of this.openedFolders.values()){
+      if(folder === v) return true;
+    }
     return false;
   }
 
