@@ -59,8 +59,12 @@ export class WindowComponent implements AfterViewInit{
   onMouseMove = (event : MouseEvent) => {
     if(!this.isDragging) return;
     const el = this.window.nativeElement;
-    el.style.left = `${event.clientX - this.xOffset}px`;
-    el.style.top = `${event.clientY - this.yOffset}px`;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const l = Math.max(0, Math.min(event.clientX - this.xOffset, screenWidth - el.getBoundingClientRect().width - 50));
+    const t = Math.max(0, Math.min(event.clientY - this.yOffset, screenHeight - el.getBoundingClientRect().height - 50));
+    el.style.left = `${l}px`;
+    el.style.top = `${t}px`;
   }
 
   hide = () => {
