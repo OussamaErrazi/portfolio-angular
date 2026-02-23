@@ -1,8 +1,8 @@
 <div class="folder">
     <p class="folder-name" [class.selected]="openedFolder && openedFolder === value" (click)="openFolder()">{{value.application.displayName}}</p>
-    <div class="show-sub-folders" *ngIf="hasSubFolders" (click)="hideReveal()">{{ showSubFolders ? '&#9655;' : '&#9665;' }}</div>
+    <div class="show-sub-folders" *ngIf="hasNestedFolders()" (click)="hideReveal()">{{ showSubFolders ? '&#9655;' : '&#9665;' }}</div>
 </div>
-<div class="sub-folders" *ngIf="value.content && showSubFolders && hasSubFolders" [ngStyle]="{'padding-left' : '10px'}">
+<div class="sub-folders" *ngIf="hasNestedFolders() && showSubFolders" [ngStyle]="{'padding-left' : '10px'}">
     <ng-container  *ngFor="let fsc of value.content | keyvalue : keepOrder; trackBy: trackByKey">
         <app-folders-structure-panel *ngIf="fsc.value.application.type === AppType.Folder" [key]="fsc.key" [value]="fsc.value" [openedFolder]="openedFolder" [switchToFolder]="switchToFolder"></app-folders-structure-panel>
     </ng-container>

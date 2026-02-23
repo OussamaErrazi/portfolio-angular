@@ -37,6 +37,13 @@ export class FoldersStructurePanelComponent implements OnInit {
     }
   }
 
+  hasNestedFolders(){
+    for(let v of this.value.content.values()){
+      if(v.application.type === AppType.Folder) return true;
+    }
+    return false;
+  }
+
   hideReveal() {
     this.showSubFolders = !this.showSubFolders;
   }
