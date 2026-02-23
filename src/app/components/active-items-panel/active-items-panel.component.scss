@@ -4,7 +4,7 @@
     width: 100%;
     min-height: max-content;
     height: 50px;
-    padding-left: 20px;
+    padding-left: 100px;
     background-color: var(--bg-color-3);
     display: flex;
     flex-direction: row;
@@ -12,9 +12,5 @@
     flex-wrap: nowrap;
     align-items: center;
 
-    .stack-item{
-        z-index: 99;
-        height: 24px; width: 200px;
-        color: var(--color-1);
-    }
+    
 }

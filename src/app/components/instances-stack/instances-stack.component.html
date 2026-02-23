@@ -1,19 +1,19 @@
-<div class="instances-container" #instancesStack
+<div class="instances-container"
     (mouseenter)="hoverStart()"
     (mouseleave)="hoverEnd()"
     (contextmenu)="onRightClick($event)"
     >
-    <div 
-        *ngFor="let item of stack; index as i" 
-        class="instance" 
-        [ngClass]="{'hidden-instance' : item.hidden, 'expanded' : expand}" 
-        [ngStyle]="{'transition-delay' : (i*0.1)+'s', 'background-color' : i%2==0 && !item.hidden ? '#0005' : ''}"
-        (mouseenter)="onMouseEnterInstance(item.id)"
-        (mouseleave)="onMouseLeaveInstance(item.id)"
-        >
-            <img src="{{item.application.icon}}" alt="icon" class="icon" (click)="putFront(item.id)"/>
-            <p class="instance-name" (click)="putFront(item.id)">{{item.application.displayName}}</p>
-            <div class="hide" (click)="hideReveal(item.id)">{{item.hidden ? '&#9652;' : '&#9662;'}}</div>
-            <div class="close" (click)="close(item.id)">X</div>
+    <div class="icon"><img src="{{stack[0].application.icon}}" alt="icon"></div>
+
+    <div class="items" [class.expanded]="expand">
+        <div class="item" *ngFor="let item of stack; index as i" style="--i : {{i}};"
+            (mouseenter)="onMouseEnterInstance(item.id)"
+            (mouseleave)="onMouseLeaveInstance(item.id)"
+            [class.hidden]="item.hidden">
+                <p class="item-name" (click)="putFront(item.id)">{{item.application.displayName}}</p>
+                <div class="button hide" (click)="hideReveal(item.id)">{{item.hidden ? '&#9650;' : '&#9660;'}}</div>
+                <div class="button close" (click)="close(item.id)">X</div>
+        </div>
     </div>
+    
 </div>

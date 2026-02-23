@@ -1,84 +1,73 @@
 .instances-container{
-    position: absolute;
-    overflow: hidden;
-    transition: transform .1s linear, min-height .1s linear;
-    transform: translateY(0);
-    display: flex;
-    flex-direction: column-reverse;
-    flex-shrink: 0;
-    row-gap: 5px;
-    max-height: 24px;
-    width: 200px;
-    background-color: rgba(0, 0, 0, 0.055);
-    min-height: 24px;
-    border: 1px solid var(--color-1-light);
+    position: relative;
 
-    .instance{
-        width: 200px;
-        min-height: 24px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        column-gap: 5px;
-        justify-content: center;
-        align-items: center;
-        transition: none;
-
+    .icon{
+        cursor: pointer;
+        width: 45px; height: 45px;
+        display: flex; justify-content: center; align-items: center;
+        border: 1px solid var(--color-1); border-radius: 10px;
+        transition: background-color .2s;
+        
         &:hover{
-            background-color: var(--color-1-light);
+            background-color: var(--color-1);
+
+            img{
+                filter: invert(100%);
+            }
         }
 
-        &:not(:nth-of-type(1)){
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-
-        .icon{
-            min-height: 20px;
-            width: 20px;
-        }
-
-        .instance-name{
-            cursor: default;
-            width: 100px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            text-align: left;
-        }
-
-        .hide,.close{
-            cursor: pointer;
-            min-height: 24px;
-            width: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }   
-        
-        
-        .hide{
-            font-size: 20px;
-        }
-
-        &:has(.close:hover){
-            background-color: var(--color-red) !important;
-        }
-
-        &:has(.hide:hover){
-            background-color: var(--color-blue) !important;
+        img{
+            width: 60%;
+            transition: filter .2s;
         }
     }
 
+    .items{
+        position: absolute;
+        top: 0; left: 0; transform: translate(-70px, -100%) scaleX(0);
+        width: 200px; padding: 10px 0;
+        transition: transform .1s;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; row-gap: 5px;
+        color: var(--color-1);
+        transform-origin: center;
+        font-weight: bold;
 
-    .hidden-instance{
-        background-color: var(--color-blue);
+        .item {
+            background-color: var(--color-1); color: var(--bg-color-1);
+            height: 30px; width: 100%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: .1s;
+
+            .item-name{
+                width: 80%; height: 90%; display: flex; align-items: center;
+                padding-left: 5px;
+            }
+
+            .button{
+                width: 10%;
+            }
+
+            &:hover{
+                background-color: var(--bg-color-1); color: var(--color-1);
+            }
+
+            &:has(.hide:hover){
+                background-color: var(--color-blue);
+            }
+
+            &:has(.close:hover){
+                background-color: var(--color-red);
+            }
+        }
+
+        .hidden{
+            opacity: .5;
+        }
     }
 
     .expanded{
-        opacity: 1 !important;
-        transform: translateX(0) !important;
-        transition: opacity 0.3s linear, transform 0.3s linear;
+        transform: translate(-70px, -100%) scaleX(1);
     }
 }
