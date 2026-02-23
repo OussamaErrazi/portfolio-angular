@@ -44,6 +44,8 @@
             .item-name{
                 width: 80%; height: 90%; display: flex; align-items: center;
                 padding-left: 5px;
+                overflow: hidden; text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .button{

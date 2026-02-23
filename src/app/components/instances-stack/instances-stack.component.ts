@@ -2,6 +2,8 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { OpenInstance } from '../../models/OpenInstance';
 import { NgFor } from '@angular/common';
 import { ContextMenuService } from '../../services/context-menu.service';
+import { AppType } from '../../models/AppType';
+import { ExitRequestService } from '../../services/exit-request.service';
 
 @Component({
   selector: 'app-instances-stack',
@@ -19,7 +21,7 @@ export class InstancesStackComponent {
   @Input() hideRevealItem !: (key : string, itemId : string) => void;
   expand = false;
 
-  constructor(private contextmenuService : ContextMenuService) {}
+  constructor(private contextmenuService : ContextMenuService, private exitRequestService : ExitRequestService) {}
 
   hoverStart() {
     this.expand = true;
@@ -35,6 +37,19 @@ export class InstancesStackComponent {
   }
 
   close(itemId : string) {
+    for(let item of this.stack) {
+      if(item.id === itemId) {
+        if(item.application.type === AppType.File) {
+          this.exitRequestService.requestExit(itemId, ()=> {
+            this.hoverEnd();
+            this.onMouseLeaveInstance(itemId);
+            this.removeStackElement(this.stackId, itemId);
+          });
+          return;
+        }
+        break;
+      }
+    }
     this.hoverEnd();
     this.onMouseLeaveInstance(itemId);
     this.removeStackElement(this.stackId, itemId);

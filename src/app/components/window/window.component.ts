@@ -10,7 +10,7 @@ import { ExitRequestService } from '../../services/exit-request.service';
   imports: [NgStyle],
   templateUrl: './window.component.html',
   styleUrl: './window.component.scss',
-  providers: [AppFocusService, ExitRequestService]
+  providers: [AppFocusService]
 })
 export class WindowComponent implements AfterViewInit{
   @ViewChild("window") window!: ElementRef<HTMLDivElement>;
@@ -73,7 +73,7 @@ export class WindowComponent implements AfterViewInit{
 
   close = () => {
     if(this.enable_exit_request) {
-      this.exitRequestService.requestExit(() => this.removeOpenInstance(this.instanceType, this.openInstance.id));
+      this.exitRequestService.requestExit( this.openInstance.id ,() => this.removeOpenInstance(this.instanceType, this.openInstance.id));
     } else {
       this.removeOpenInstance(this.instanceType, this.openInstance.id);
     }

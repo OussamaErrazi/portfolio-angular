@@ -5,7 +5,7 @@ import Script from '../../models/Script';
 import { Experience } from '../../models/Experience';
 import { ConfirmationWindowService } from '../../services/confirmation-window.service';
 import { ExitRequestService } from '../../services/exit-request.service';
-import { Subscription } from 'rxjs';
+import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-file-reader',
@@ -15,15 +15,20 @@ import { Subscription } from 'rxjs';
 })
 export class FileReaderComponent implements OnInit, AfterViewInit, OnDestroy{
 
+  @Input() id!: string;
   @Input() experience !: Experience;
   @Input() script !: Script | undefined;
 
   private sub !:Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(private el : ElementRef, private confirmationWindowService : ConfirmationWindowService, private exitRequestService : ExitRequestService) {}
 
   ngOnInit(): void {
-    this.sub = this.exitRequestService.exitRequested$.subscribe(async (proceed) => {
+    this.sub = this.exitRequestService.exitRequested$.pipe(
+      filter(event => event.windowId === this.id)
+    )
+    .subscribe(async event => {
       const title = this.el.nativeElement.querySelector('.title');
       const description = this.el.nativeElement.querySelector('.description');
       if(title.innerText !== this.experience.header || description.innerText !== this.experience.body) {
@@ -32,9 +37,9 @@ export class FileReaderComponent implements OnInit, AfterViewInit, OnDestroy{
           this.experience.header = title.innerText;
           this.experience.body = description.innerText;
         }
-        proceed();
+        event.callback();
       } else {
-        proceed();
+        event.callback();
       }
     })
   }

@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ExitRequestService {
-  private exitRequestSource = new Subject<() => void>();
+  private exitRequestSource = new Subject<{windowId : string, callback :() => void}>();
   exitRequested$ = this.exitRequestSource.asObservable();
 
   
-  requestExit(callback: ()=> void) {
-    this.exitRequestSource.next(callback);
+  requestExit(windowId : string, callback: ()=> void) {
+    this.exitRequestSource.next({windowId, callback});
   }
 }
