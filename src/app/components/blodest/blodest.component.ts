@@ -46,6 +46,8 @@ export class BlodestComponent{
 
 
   startGame() {
+    const maxScoreString = localStorage.getItem("bloDestMaxScore");
+    this.maxScore = maxScoreString ? Number(maxScoreString) : 0;
     this.undoPlusOne();
     this.loadingGame = true;
     this.loadingPhase(0, 300);
@@ -139,7 +141,10 @@ export class BlodestComponent{
         if(this.ballSpeed<9) this.ballSpeed++;
         if(ball.right < bar.left || ball.left > bar.right) {
           this.gameOver = true;
-          this.maxScore = Math.max(this.maxScore, this.currentScore);
+          if(this.currentScore > this.maxScore) {
+            localStorage.setItem('bloDestMaxScore', JSON.stringify(this.currentScore));
+            this.maxScore = this.currentScore;
+          }
           return;
         }
         if(this.barSpeed < 0) this.moveBallByX = -this.ballSpeed;
