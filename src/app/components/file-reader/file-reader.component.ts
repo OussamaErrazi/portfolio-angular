@@ -32,7 +32,7 @@ export class FileReaderComponent implements OnInit, AfterViewInit, OnDestroy{
       const title = this.el.nativeElement.querySelector('.title');
       const description = this.el.nativeElement.querySelector('.description');
       if(title.innerText !== this.experience.header || description.innerText !== this.experience.body) {
-        const answer = await this.confirmationWindowService.ask("You have unsaved changes, you want to saving them before closing?");
+        const answer = await this.confirmationWindowService.ask("You have unsaved changes, you want to save them before closing?");
         if(answer) {
           this.experience.header = title.innerText;
           this.experience.body = description.innerText;
