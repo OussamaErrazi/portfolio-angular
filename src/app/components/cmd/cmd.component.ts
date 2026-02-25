@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cmd',
-  imports: [NgFor, NgIf],
+  imports: [NgFor],
   templateUrl: './cmd.component.html',
   styleUrl: './cmd.component.scss'
 })
@@ -22,6 +22,7 @@ export class CMDComponent implements OnInit, OnDestroy {
   enteredCommands : string[] = [];
   currentCommand : string = '';
   readonly shellPrompt = 'guest@tealOs:~$';
+  entries:CommandEntry[] = [];
 
   constructor(private appFocusService : AppFocusService) {}
   
@@ -47,11 +48,11 @@ export class CMDComponent implements OnInit, OnDestroy {
     event.preventDefault();
     const command = event.target.innerText.trim();
     if(command.toLocaleLowerCase() === 'clear') {
-      this.enteredCommands = [];
+      this.entries = [];
     } else if (command.toLocaleLowerCase() === 'exit') {
       this.exit(this.key1, this.key2);
     } else {
-      this.enteredCommands.push(command);
+      this.entries.push(this.commandResult(command));
     }
     
     event.target.innerText = '';
@@ -98,15 +99,20 @@ export class CMDComponent implements OnInit, OnDestroy {
     this.commandsResult.set('print email', ['errazi111@gmail.com']);
   }
 
-  commandToKey(command : string) {
-    if(this.commandsResult.has(command)) return command;
+  commandResult(command : string) : CommandEntry {
     if(command.toLocaleLowerCase().startsWith('print')){
-      return command.replace(/\s+/g, " ");
+      return {command : command.replace(/\s+/g, " "), result : this.commandsResult.get(command.replace(/\s+/g, " ")) || [this.getErrorMessage(command.replace(/\s+/g, " "))], isError : !this.commandsResult.has(command.replace(/\s+/g, " "))};
     }
-    return command;
+    if(this.commandsResult.has(command)) {
+      return {command : command, result : this.commandsResult.get(command) || [], isError : false};
+    }
+    else {
+      return {command : command, result : [this.getErrorMessage(command)], isError : true};
+    }
   }
 
   getErrorMessage(command : string) {
+    console.log("executing")
     if (command.toLocaleLowerCase().startsWith('print')) {
       if (command.toLocaleLowerCase() === 'print') return 'missing arg for command print.'
       const args = command.split(/\s+/g);
@@ -119,4 +125,10 @@ export class CMDComponent implements OnInit, OnDestroy {
     }
     return command + ' is not recognized as an available command.'
   }
+}
+
+interface CommandEntry{
+  command : string;
+  result : string[];
+  isError : boolean;
 }
